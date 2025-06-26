@@ -1,79 +1,81 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using static System.Runtime.InteropServices.JavaScript.JSType;
 
-namespace GraphProject
+namespace GraphProject;
+
+public class Graph(int[, ] adjacencyMatrix)
 {
-    public class Graph(int[][] adjacencyMatrix)
+    private int _verticesCount = adjacencyMatrix.GetLength(0);
+    //private int[, ] _adjacencyMatrix = adjacencyMatrix;
+    private int[, ] _adjacencyMatrix = (int[,])adjacencyMatrix.Clone();
+
+
+    public int VerticesCount()
     {
-        private int _verticesCount = adjacencyMatrix.GetLength(0);
-        private int[][] _adjacencyMatrix = adjacencyMatrix;
+        return _verticesCount;
+    }
 
-        public int VerticesCount()
+    public int[, ] AdjacencyMatrix()
+    {
+        return _adjacencyMatrix;
+    }
+
+    public List<int> GetNeighbors(int vertex)
+    {
+        if (vertex >= _verticesCount)
         {
-            return _verticesCount;
+            Console.WriteLine("Error: Vertice index out of range (Graph: GetNeightbors)");
+            return [];
         }
 
-        public int[][] AdjacencyMatrix()
+        List<int> neighbors = new List<int>();
+
+        for (int i=0; i < _verticesCount; i++)
+        { 
+            if (_adjacencyMatrix[vertex, i] == 1) { neighbors.Add(i); } 
+        }
+        return neighbors;
+    }
+
+    public void RemoveEdge(int u, int v) {
+        _adjacencyMatrix[u, v] = 0;
+        _adjacencyMatrix[v, u] = 0;
+    }
+
+    public bool IsBridge(int u, int v)
+    {
+        if (_adjacencyMatrix[u, v] == 0) { return false; }
+        Graph edgelessGraph = new Graph(_adjacencyMatrix);
+        edgelessGraph.RemoveEdge(u, v);
+        if (edgelessGraph.VertexComponent(u)[v] == false) { return true; }
+        return false;
+    }
+
+    private bool[] VertexComponent(int startVertex)
+    {
+        if (startVertex >= _verticesCount)
         {
-            return _adjacencyMatrix;
+            Console.WriteLine("Error: Vertice index out of range (Graph: VertexComponent)");
+            return [];
         }
 
-        public int[] GetNeighbors(int u)
+        bool[] startComponent = new bool[_verticesCount];
+        VertexComponentInternal(startVertex, startComponent);
+
+        void VertexComponentInternal(int vertex, bool[] visited)
         {
-            if (u >= _verticesCount)
+            visited[vertex] = true;
+            foreach (int neighbor in GetNeighbors(vertex))
             {
-                Console.WriteLine("Error: Vertice index out of range (Graph: GetNeightbors)");
-                return [];
+                if (!visited[neighbor]) { VertexComponentInternal(neighbor, visited); }
             }
-
-            int[] neighbors = [];
-
-            for (int i=0; i < _verticesCount; i++) 
-            { 
-                if (_adjacencyMatrix[u][i] == 1) { neighbors.Append(i); } 
-            }
-            return neighbors;
         }
 
-        public void RemoveEdge(int u, int v) {
-            _adjacencyMatrix[u][v] = 0;
-            _adjacencyMatrix[v][u] = 0;
-        }
-
-        public bool IsBridge(int u, int v)
-        {
-            if (_adjacencyMatrix[u][v] == 0) { return false; }
-            Graph edgelessGraph = new Graph(_adjacencyMatrix);
-            edgelessGraph.RemoveEdge(u, v);
-            if (edgelessGraph.VertexComponent(u)[v] == false) { return true; }
-            return false;
-        }
-
-        private bool[] VertexComponent(int startVertex)
-        {
-            if (startVertex >= _verticesCount)
-            {
-                Console.WriteLine("Error: Vertice index out of range (Graph: VertexComponent)");
-                return [];
-            }
-
-            bool[] uComponent = new bool[_verticesCount];
-            VertexComponentInternal(startVertex, uComponent);
-
-            void VertexComponentInternal(int vertex, bool[] visited)
-            {
-                visited[vertex] = true;
-                foreach (int neighbor in GetNeighbors(vertex))
-                {
-                    if (!visited[neighbor]) { VertexComponentInternal(neighbor, visited); }
-                }
-            }
-
-            return uComponent;
-        }
-    }   
-}
-
+        return startComponent;
+    }
+}   
