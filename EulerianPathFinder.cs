@@ -17,13 +17,12 @@ public class EulerianPathFinder
         while (true) 
         {
             List<int> neighbors = graph.GetNeighbors(cycle.Peek());
-            Console.WriteLine($"{cycle.Peek()}: {neighbors.Count()}");
             if (neighbors.Count == 0) { break; }
             bool foundNextVertex = false;
 
             foreach (int neighbor in neighbors)
             {
-                if (graph.IsBridge(cycle.Peek(), neighbor))
+                if (!graph.IsBridge(cycle.Peek(), neighbor))
                 {
                     graph.RemoveEdge(cycle.Peek(), neighbor);
                     cycle.Push(neighbor);

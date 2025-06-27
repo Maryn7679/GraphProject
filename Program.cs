@@ -8,14 +8,15 @@ internal class Program
     {
         //var b = new GraphProject.GraphVisualizer();
         //b.Draw();
-        int[, ] testGraph = {{0, 1, 1, 1, 1, 0 },
-                            { 1, 0, 1, 0, 0, 0 },
-                            { 1, 1, 0, 1, 1, 0 },
-                            { 1, 0, 1, 0, 1, 1 },
-                            { 1, 0, 1, 1, 0, 1 },
-                            { 0, 0, 0, 1, 1, 0 } };
+        //int[,] testGraph = {{0, 1, 1, 1, 1, 0 },
+        //                    { 1, 0, 1, 0, 0, 0 },
+        //                    { 1, 1, 0, 1, 1, 0 },
+        //                    { 1, 0, 1, 0, 1, 1 },
+        //                    { 1, 0, 1, 1, 0, 1 },
+        //                    { 0, 0, 0, 1, 1, 0 } };
 
-        Graph graph = new Graph(testGraph);
+        int[,] inputMatrix = Input.InputGraph();
+        Graph graph = new Graph(inputMatrix);
 
         var path = EulerianPathFinder.GetEulerianCycle(graph);
 

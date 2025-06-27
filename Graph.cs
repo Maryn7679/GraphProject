@@ -8,11 +8,10 @@ using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace GraphProject;
 
-public class Graph(int[, ] adjacencyMatrix)
+public class Graph(int[,] adjacencyMatrix)
 {
     private int _verticesCount = adjacencyMatrix.GetLength(0);
-    //private int[, ] _adjacencyMatrix = adjacencyMatrix;
-    private int[, ] _adjacencyMatrix = (int[,])adjacencyMatrix.Clone();
+    private int[,] _adjacencyMatrix = (int[,])adjacencyMatrix.Clone();
 
 
     public int VerticesCount()
@@ -20,7 +19,7 @@ public class Graph(int[, ] adjacencyMatrix)
         return _verticesCount;
     }
 
-    public int[, ] AdjacencyMatrix()
+    public int[,] AdjacencyMatrix()
     {
         return _adjacencyMatrix;
     }
