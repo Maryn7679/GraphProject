@@ -6,8 +6,8 @@ internal class Program
 {
     public static void Main()
     {
-        //var b = new GraphProject.GraphVisualizer();
-        //b.Draw();
+        GraphVisualizer.Draw();
+
         //int[,] testGraph = {{0, 1, 1, 1, 1, 0 },
         //                    { 1, 0, 1, 0, 0, 0 },
         //                    { 1, 1, 0, 1, 1, 0 },
@@ -15,14 +15,10 @@ internal class Program
         //                    { 1, 0, 1, 1, 0, 1 },
         //                    { 0, 0, 0, 1, 1, 0 } };
 
-        int[,] inputMatrix = Input.InputGraph();
-        Graph graph = new Graph(inputMatrix);
+        //int[,] inputMatrix = UserInterface.InputGraph();
+        //Graph graph = new Graph(inputMatrix);
 
-        var path = EulerianPathFinder.GetEulerianCycle(graph);
-
-        foreach (var item in path)
-        {
-            Console.WriteLine(item.ToString());
-        }
+        //var path = EulerianPathFinder.GetEulerianCycle(graph);
+        //UserInterface.PrintPath(path);
     }
 }

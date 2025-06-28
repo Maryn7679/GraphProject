@@ -6,8 +6,18 @@ using System.Threading.Tasks;
 
 namespace GraphProject;
 
-public class Input
+public class UserInterface
 {
+    public static void PrintPath(Stack<int> path)
+    {
+        string outputString = "";
+        foreach (var vertex in path)
+        {
+            outputString += (vertex.ToString() + " -> ");
+        }
+        Console.WriteLine($"Eulerian path: {outputString}");
+    }
+
     public static int[,] InputGraph()
     {
         Console.WriteLine("Select input method (Random, Edges, Matrix): ");
@@ -32,14 +42,16 @@ public class Input
         int verticesCount = int.Parse(verticesCountInput);
         int[,] matrix = new int[verticesCount, verticesCount];
 
-        Console.WriteLine("Enter edges, separated by comma: ");
+        Console.WriteLine("Enter edges in u-v format, separated by comma: ");
         string edgesInput = Console.ReadLine();
         string[] edges = edgesInput.Split(',');
 
         foreach (string edge in edges)
         {
-            int u = int.Parse(edge[0].ToString());
-            int v = int.Parse(edge[1].ToString());
+            string[] edgeArray = edge.Split('-');
+
+            int u = int.Parse(edgeArray[0]);
+            int v = int.Parse(edgeArray[1]);
             matrix[u, v] = 1;
             matrix[v, u] = 1;
         }
