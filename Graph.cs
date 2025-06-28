@@ -28,13 +28,12 @@ public class Graph(int[,] adjacencyMatrix)
     {
         if (vertex >= _verticesCount)
         {
-            Console.WriteLine("Error: Vertice index out of range (Graph: GetNeightbors)");
-            return [];
+            throw new ArgumentException("Error: Vertice index out of range (Graph: GetNeightbors)");
         }
 
         List<int> neighbors = new List<int>();
 
-        for (int i=0; i < _verticesCount; i++)
+        for (int i = 0; i < _verticesCount; i++)
         { 
             if (_adjacencyMatrix[vertex, i] == 1) { neighbors.Add(i); } 
         }
@@ -43,7 +42,6 @@ public class Graph(int[,] adjacencyMatrix)
 
     public void RemoveEdge(int u, int v) {
         _adjacencyMatrix[u, v] = 0;
-        _adjacencyMatrix[v, u] = 0;
     }
 
     public bool IsBridge(int u, int v)
@@ -55,12 +53,18 @@ public class Graph(int[,] adjacencyMatrix)
         return false;
     }
 
+    public bool IsConnected()
+    {
+        bool[] component = VertexComponent(0);
+        if (component.All(vertex => vertex == true)) { return true; }
+        return false;
+    }
+
     private bool[] VertexComponent(int startVertex)
     {
         if (startVertex >= _verticesCount)
         {
-            Console.WriteLine("Error: Vertice index out of range (Graph: VertexComponent)");
-            return [];
+            throw new ArgumentException("Error: Vertice index out of range (Graph: VertexComponent)");
         }
 
         bool[] startComponent = new bool[_verticesCount];

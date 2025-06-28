@@ -6,7 +6,7 @@ internal class Program
 {
     public static void Main()
     {
-        GraphVisualizer.Draw();
+        //GraphVisualizer.Draw();
 
         //int[,] testGraph = {{0, 1, 1, 1, 1, 0 },
         //                    { 1, 0, 1, 0, 0, 0 },
@@ -15,10 +15,20 @@ internal class Program
         //                    { 1, 0, 1, 1, 0, 1 },
         //                    { 0, 0, 0, 1, 1, 0 } };
 
-        //int[,] inputMatrix = UserInterface.InputGraph();
-        //Graph graph = new Graph(inputMatrix);
+        int[,] inputMatrix = UserInterface.SetGraph();
+        Graph graph = new Graph(inputMatrix);
 
-        //var path = EulerianPathFinder.GetEulerianCycle(graph);
-        //UserInterface.PrintPath(path);
+        HashSet<int> dominationSet = DominationSetFinder.GetMinimalDominationSet(graph);
+        UserInterface.PrintDominationSet(dominationSet);
+
+        if (EulerianPathFinder.IsEulerian(graph))
+        {
+            Stack<int> path = EulerianPathFinder.GetEulerianCycle(graph);
+            UserInterface.PrintPath(path);
+        }
+        else
+        {
+            Console.WriteLine("Graph is not Eulerian");
+        }
     }
 }

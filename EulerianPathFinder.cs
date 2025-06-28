@@ -11,6 +11,11 @@ public class EulerianPathFinder
 {
     public static Stack<int> GetEulerianCycle(Graph graph)
     {
+        if (!IsEulerian(graph)) 
+        {
+            throw new ArgumentException("Graph is not Eulerian");
+        }
+
         Stack<int> cycle = new Stack<int>();
         cycle.Push(0);
 
@@ -39,6 +44,28 @@ public class EulerianPathFinder
         }
 
         return cycle;
+    }
+
+    public static bool IsEulerian(Graph graph) 
+    {
+        if (!graph.IsConnected()) { return false; }
+
+        int[,] matrix = graph.AdjacencyMatrix();
+        for (int i = 0; i < graph.VerticesCount(); i++)
+        {
+            int inDegree = 0;
+            int outDegree = 0;
+
+            for (int q = 0; q < graph.VerticesCount(); q++)
+            {
+                outDegree += matrix[i, q];
+                inDegree += matrix[q, i];
+            }
+
+            if (inDegree != outDegree) { return false; }
+        }
+
+        return true;
     }
 }
 
