@@ -14,17 +14,54 @@ public class GraphVisualizer
         //var bitmap = new Bitmap(640, 480);
         Image image = Bitmap.FromFile("Images/base.png");
         Bitmap bitmap_red = new Bitmap(image);
+        ColorGradient palette = new ColorGradient(Color.Magenta, Color.Cyan, 5);
 
-        DrawLine((32, 75), (111, 38), bitmap_red);
-        DrawLine((111, 38), (32, 75), bitmap_red);
-        DrawLine((32, 75), (111, 38), bitmap_red);
-        DrawLine((59, 93), (86, 25), bitmap_red);
-        DrawLine((59, 25), (86, 93), bitmap_red);
+        DrawLine((31, 75), (110, 38), palette.Next(), bitmap_red);
+        DrawLine((111, 38), (32, 75), palette.Next(), bitmap_red);
+        DrawLine((33, 75), (112, 38), palette.Next(), bitmap_red);
+        DrawLine((59, 93), (86, 25), palette.Next(), bitmap_red);
+        DrawLine((59, 25), (86, 93), palette.Next(), bitmap_red);
 
         bitmap_red.Save("Images/red.png");
     }
 
-    //public static void DrawEulerianPath(Stack<int> path, int verticesCount, int canvasSize)
+    public static void DrawGraph(Stack<int> path, HashSet<int> dominationSet, int verticesCount, int canvasSize)
+    {
+        Bitmap bitmap = new Bitmap(canvasSize, canvasSize);
+        (int, int)[] vertexCoordinates = new (int, int)[verticesCount];
+        Random random = new Random();
+        ColorGradient palette = new ColorGradient(Color.Lime, Color.Magenta, path.Count - 1);
+
+        for (int i = 0; i < verticesCount; i++)
+        {
+            int x = random.Next(10, canvasSize - 10);
+            int y = random.Next(10, canvasSize - 10);
+
+            vertexCoordinates[i] = (x, y);
+        }
+
+        int startVertex = path.Pop();
+        foreach (int nextVertex in path) 
+        {
+            Color nextColor = palette.Next();
+            DrawLine(vertexCoordinates[startVertex], vertexCoordinates[nextVertex], nextColor, bitmap);
+
+            if (dominationSet.Contains(nextVertex))
+            {
+                DrawPoint(vertexCoordinates[nextVertex], Color.Black, bitmap);
+            }
+            else
+            {
+                DrawPoint(vertexCoordinates[nextVertex], nextColor, bitmap);
+            }
+
+            startVertex = nextVertex;
+        }
+
+        bitmap.Save("Images/Eulerian_path.png");
+    }
+
+    //public static void DrawGraph(Stack<int> path, int verticesCount, int canvasSize)
     //{
     //    Bitmap bitmap = new Bitmap(canvasSize, canvasSize);
     //    int[][] angles = new int[verticesCount][];
@@ -43,20 +80,20 @@ public class GraphVisualizer
     //                int angle = CalculateAngle(vertexCoordinates[q], (x, y));
     //                newAngles[q] = angle;
     //            }
-                //foreach ((int, int) existingVertex in vertexCoordinates[..(i - 1)]) 
-                //{ 
-                //    int angle = CalculateAngle(existingVertex, (x, y));
-                //    newAngles.Append(angle);
-                //}
-        //    }
-        //}
-        //bitmap_red.Save("Images/red.png");
+    //foreach ((int, int) existingVertex in vertexCoordinates[..(i - 1)]) 
+    //{ 
+    //    int angle = CalculateAngle(existingVertex, (x, y));
+    //    newAngles.Append(angle);
+    //}
+    //    }
+    //}
+    //bitmap_red.Save("Images/red.png");
 
     //}
 
     //private static int CalculateAngle((int, int) a, (int, int) b) { }
 
-    private static void DrawLine((int, int) a, (int, int) b, Bitmap canvas) 
+    private static void DrawLine((int, int) a, (int, int) b, Color color, Bitmap canvas) 
     {
         int xDistance = Math.Abs(a.Item1 - b.Item1);
         int yDistance = Math.Abs(a.Item2 - b.Item2);
@@ -90,7 +127,6 @@ public class GraphVisualizer
                     y = i + Math.Min(a.Item2, b.Item2);
                 }
 
-                Color color = Color.Magenta;
                 canvas.SetPixel(x, y, color);
             }
         }
@@ -110,9 +146,54 @@ public class GraphVisualizer
                     y = Math.Max(a.Item2, b.Item2) - i;
                 }
 
-                Color color = Color.Magenta;
                 canvas.SetPixel(x, y, color);
             }
         }
+    }
+
+    private static void DrawPoint((int, int) point, Color color, Bitmap canvas)
+    {
+        for (int x = point.Item1 - 2; x <= point.Item1 + 2; x++)
+        {
+            for (int y = point.Item2 - 2; y <= point.Item2 + 2; y++)
+            {
+                if (Math.Abs(point.Item1 - x) + Math.Abs(point.Item2 - y) < 4)
+                {
+                    canvas.SetPixel(x, y, color);
+                }
+            }
+        }
+    }
+}
+
+public class ColorGradient(Color startColor, Color endColor, int steps)
+{
+    private Color _lastColor = startColor;
+    private Color _nextColor = startColor;
+    private int _step = 0;
+
+    private int redChange = (endColor.R - startColor.R) / (steps - 1);
+    private int greenChange = (endColor.G - startColor.G) / (steps - 1);
+    private int blueChange = (endColor.B - startColor.B) / (steps - 1);
+
+    public Color Next()
+    {
+        _lastColor = _nextColor;
+        _nextColor = GetNextColor();
+        return _lastColor;
+    }
+
+    private Color GetNextColor()
+    {
+        _step += 1;
+        if (_step == steps) 
+        {
+            redChange = 0; greenChange = 0; blueChange = 0;
+        }
+
+        Color next = Color.FromArgb(_lastColor.R + redChange,
+                                    _lastColor.G + greenChange,
+                                    _lastColor.B + blueChange);
+        return next;
     }
 }

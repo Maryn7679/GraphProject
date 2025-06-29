@@ -29,15 +29,15 @@ public class UserInterface
         Console.WriteLine($"Domination set: {outputString}");
     }
 
-    public static int[,] SetGraph()
+    public static Graph SetGraph()
     {
         Console.WriteLine("Select set method (Random, Edges, Matrix): ");
         string input = Console.ReadLine();
-        int[,] graph = ParseUserInput(input);
+        Graph graph = ParseUserInput(input);
         return graph;
     }
 
-    private static int[,] ParseUserInput(string input) =>
+    private static Graph ParseUserInput(string input) =>
         input switch
         {
             "Random" => GenerateGraph(),
@@ -49,7 +49,7 @@ public class UserInterface
             _ => throw new ArgumentException("Invalid string value for command", nameof(input)),
         };
 
-    private static int[,] InputEdges()
+    private static Graph InputEdges()
     {
         Console.WriteLine("Enter graph type (Standard, Directional): ");
         string graphTypeInput = Console.ReadLine();
@@ -76,6 +76,7 @@ public class UserInterface
                 matrix[u, v] = 1;
                 matrix[v, u] = 1;
             }
+            return new Graph(matrix);
         }
 
         else if (graphTypeInput == "Directional" ||
@@ -90,21 +91,20 @@ public class UserInterface
 
                 matrix[u, v] = 1;
             }
+            return new Graph(matrix, isDirected: true);
         }
 
         else
         {
             throw new ArgumentException("Invalid string value for command", nameof(graphTypeInput));
         }
-
-        return matrix;
     }
 
-    //private static int[,] InputMatrix()
+    //private static Graph InputMatrix()
     //{
     //}
 
-    private static int[,] GenerateGraph()
+    private static Graph GenerateGraph()
     {
         Console.WriteLine("Enter graph type (Standard, Directional): ");
         string graphTypeInput = Console.ReadLine();
@@ -127,6 +127,7 @@ public class UserInterface
                     matrix[q, i] = matrix[i, q];
                 }
             }
+            return new Graph(matrix);
         }
 
         else if (graphTypeInput == "Directional" ||
@@ -139,13 +140,12 @@ public class UserInterface
                     matrix[i, q] = rnd.Next(2);
                 }
             }
+            return new Graph(matrix, isDirected: true);
         }
 
         else
         {
             throw new ArgumentException("Invalid string value for command", nameof(graphTypeInput));
         }
-
-        return matrix;
     }
 }

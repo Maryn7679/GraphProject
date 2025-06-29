@@ -8,15 +8,15 @@ internal class Program
     {
         //GraphVisualizer.Draw();
 
-        //int[,] testGraph = {{0, 1, 1, 1, 1, 0 },
-        //                    { 1, 0, 1, 0, 0, 0 },
-        //                    { 1, 1, 0, 1, 1, 0 },
-        //                    { 1, 0, 1, 0, 1, 1 },
-        //                    { 1, 0, 1, 1, 0, 1 },
-        //                    { 0, 0, 0, 1, 1, 0 } };
+        int[,] testGraph = {{0, 1, 1, 1, 1, 0 },
+                            { 1, 0, 1, 0, 0, 0 },
+                            { 1, 1, 0, 1, 1, 0 },
+                            { 1, 0, 1, 0, 1, 1 },
+                            { 1, 0, 1, 1, 0, 1 },
+                            { 0, 0, 0, 1, 1, 0 } };
 
-        int[,] inputMatrix = UserInterface.SetGraph();
-        Graph graph = new Graph(inputMatrix);
+        //int[,] inputMatrix = UserInterface.SetGraph();
+        Graph graph = new Graph(testGraph);
 
         HashSet<int> dominationSet = DominationSetFinder.GetMinimalDominationSet(graph);
         UserInterface.PrintDominationSet(dominationSet);
@@ -25,6 +25,7 @@ internal class Program
         {
             Stack<int> path = EulerianPathFinder.GetEulerianCycle(graph);
             UserInterface.PrintPath(path);
+            GraphVisualizer.DrawGraph(path, dominationSet, graph.VerticesCount(), 200);
         }
         else
         {

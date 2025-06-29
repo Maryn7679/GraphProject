@@ -8,10 +8,11 @@ using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace GraphProject;
 
-public class Graph(int[,] adjacencyMatrix)
+public class Graph(int[,] adjacencyMatrix, bool isDirected = false)
 {
     private int _verticesCount = adjacencyMatrix.GetLength(0);
     private int[,] _adjacencyMatrix = (int[,])adjacencyMatrix.Clone();
+    private bool _isDirected = isDirected;
 
 
     public int VerticesCount()
@@ -42,6 +43,10 @@ public class Graph(int[,] adjacencyMatrix)
 
     public void RemoveEdge(int u, int v) {
         _adjacencyMatrix[u, v] = 0;
+        if (!_isDirected)
+        {
+            _adjacencyMatrix[v, u] = 0;
+        }
     }
 
     public bool IsBridge(int u, int v)
