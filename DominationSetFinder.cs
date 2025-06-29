@@ -12,25 +12,19 @@ public class DominationSetFinder
     {
         HashSet<int> dominationSet = new HashSet<int>();
         HashSet<int> dominationSetNeighbors = new HashSet<int>();
-        dominationSet.Add(0);
 
         for (int vertex = 0; vertex < graph.VerticesCount(); vertex++)
         {
-            if (dominationSet.Contains(vertex))
-            {
-                foreach (int neighbor in graph.GetNeighbors(vertex))
-                {
-                    dominationSetNeighbors.Add(neighbor);
-                }
-                continue;
-            }
-
             if (dominationSetNeighbors.Contains(vertex))
             {
                 continue;
             }
 
             dominationSet.Add(vertex);
+            foreach (int neighbor in graph.GetNeighbors(vertex))
+            {
+                dominationSetNeighbors.Add(neighbor);
+            }
         }
 
         return dominationSet;

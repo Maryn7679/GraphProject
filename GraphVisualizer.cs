@@ -9,7 +9,7 @@ namespace GraphProject;
 
 public class GraphVisualizer
 {
-    public static void DrawEulerianPath(Stack<int> path, int verticesCount, int canvasSize)
+    public static void DrawEulerianPath(Stack<int> path, HashSet<int> dominationSet, int verticesCount, int canvasSize)
     {
         Bitmap bitmap = new Bitmap(canvasSize, canvasSize);
         (int, int)[] vertexCoordinates = new (int, int)[verticesCount];
@@ -24,14 +24,32 @@ public class GraphVisualizer
             vertexCoordinates[i] = (x, y);
         }
 
-        int startVertex = path.Pop();
+        int origin = path.Pop();
+        int startVertex = origin;
         foreach (int nextVertex in path) 
         {
             Color nextColor = palette.Next();
             DrawLine(vertexCoordinates[startVertex], vertexCoordinates[nextVertex], nextColor, bitmap);
-            DrawPoint(vertexCoordinates[nextVertex], nextColor, bitmap);
+            if (dominationSet.Contains(nextVertex))
+            {
+                DrawPoint(vertexCoordinates[nextVertex], Color.Lime, bitmap);
+            }
+            else
+            {
+                DrawPoint(vertexCoordinates[nextVertex], nextColor, bitmap);
+            }
 
             startVertex = nextVertex;
+        }
+        Color lastColor = palette.Next();
+        DrawLine(vertexCoordinates[startVertex], vertexCoordinates[origin], lastColor, bitmap);
+        if (dominationSet.Contains(origin))
+        {
+            DrawPoint(vertexCoordinates[origin], Color.Lime, bitmap);
+        }
+        else
+        {
+            DrawPoint(vertexCoordinates[origin], lastColor, bitmap);
         }
 
         bitmap.Save("Images/Graph.png");

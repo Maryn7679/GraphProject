@@ -24,7 +24,7 @@ internal class Program
         {
             Stack<int> path = EulerianPathFinder.GetEulerianCycle(graph);
             UserInterface.PrintPath(path);
-            GraphVisualizer.DrawEulerianPath(path, graph.VerticesCount(), 200);
+            GraphVisualizer.DrawEulerianPath(path, dominationSet, graph.VerticesCount(), 200);
         }
         else
         {
