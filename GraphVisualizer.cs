@@ -9,28 +9,12 @@ namespace GraphProject;
 
 public class GraphVisualizer
 {
-    public static void Draw()
-    {
-        //var bitmap = new Bitmap(640, 480);
-        Image image = Bitmap.FromFile("Images/base.png");
-        Bitmap bitmap_red = new Bitmap(image);
-        ColorGradient palette = new ColorGradient(Color.Magenta, Color.Cyan, 5);
-
-        DrawLine((31, 75), (110, 38), palette.Next(), bitmap_red);
-        DrawLine((111, 38), (32, 75), palette.Next(), bitmap_red);
-        DrawLine((33, 75), (112, 38), palette.Next(), bitmap_red);
-        DrawLine((59, 93), (86, 25), palette.Next(), bitmap_red);
-        DrawLine((59, 25), (86, 93), palette.Next(), bitmap_red);
-
-        bitmap_red.Save("Images/red.png");
-    }
-
-    public static void DrawGraph(Stack<int> path, HashSet<int> dominationSet, int verticesCount, int canvasSize)
+    public static void DrawEulerianPath(Stack<int> path, int verticesCount, int canvasSize)
     {
         Bitmap bitmap = new Bitmap(canvasSize, canvasSize);
         (int, int)[] vertexCoordinates = new (int, int)[verticesCount];
         Random random = new Random();
-        ColorGradient palette = new ColorGradient(Color.Lime, Color.Magenta, path.Count - 1);
+        ColorGradient palette = new ColorGradient(Color.Yellow, Color.Magenta, path.Count - 1);
 
         for (int i = 0; i < verticesCount; i++)
         {
@@ -45,53 +29,13 @@ public class GraphVisualizer
         {
             Color nextColor = palette.Next();
             DrawLine(vertexCoordinates[startVertex], vertexCoordinates[nextVertex], nextColor, bitmap);
-
-            if (dominationSet.Contains(nextVertex))
-            {
-                DrawPoint(vertexCoordinates[nextVertex], Color.Black, bitmap);
-            }
-            else
-            {
-                DrawPoint(vertexCoordinates[nextVertex], nextColor, bitmap);
-            }
+            DrawPoint(vertexCoordinates[nextVertex], nextColor, bitmap);
 
             startVertex = nextVertex;
         }
 
-        bitmap.Save("Images/Eulerian_path.png");
+        bitmap.Save("Images/Graph.png");
     }
-
-    //public static void DrawGraph(Stack<int> path, int verticesCount, int canvasSize)
-    //{
-    //    Bitmap bitmap = new Bitmap(canvasSize, canvasSize);
-    //    int[][] angles = new int[verticesCount][];
-    //    (int, int)[] vertexCoordinates = new (int, int)[verticesCount];
-    //    Random random = new Random();
-
-    //    for (int i = 0; i < verticesCount; i++)
-    //    {
-    //        int x = random.Next(canvasSize);
-    //        int y = random.Next(canvasSize);
-    //        if (i != 0)
-    //        {
-    //            int[] newAngles = new int[i];
-    //            for (int q = 0; q < i; q++) 
-    //            {
-    //                int angle = CalculateAngle(vertexCoordinates[q], (x, y));
-    //                newAngles[q] = angle;
-    //            }
-    //foreach ((int, int) existingVertex in vertexCoordinates[..(i - 1)]) 
-    //{ 
-    //    int angle = CalculateAngle(existingVertex, (x, y));
-    //    newAngles.Append(angle);
-    //}
-    //    }
-    //}
-    //bitmap_red.Save("Images/red.png");
-
-    //}
-
-    //private static int CalculateAngle((int, int) a, (int, int) b) { }
 
     private static void DrawLine((int, int) a, (int, int) b, Color color, Bitmap canvas) 
     {

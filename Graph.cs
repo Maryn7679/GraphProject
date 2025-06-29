@@ -14,6 +14,10 @@ public class Graph(int[,] adjacencyMatrix, bool isDirected = false)
     private int[,] _adjacencyMatrix = (int[,])adjacencyMatrix.Clone();
     private bool _isDirected = isDirected;
 
+    public bool IsDirected()
+    {
+        return _isDirected;
+    }
 
     public int VerticesCount()
     {

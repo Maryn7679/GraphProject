@@ -51,18 +51,36 @@ public class EulerianPathFinder
         if (!graph.IsConnected()) { return false; }
 
         int[,] matrix = graph.AdjacencyMatrix();
-        for (int i = 0; i < graph.VerticesCount(); i++)
+
+        if (graph.IsDirected()) 
         {
-            int inDegree = 0;
-            int outDegree = 0;
-
-            for (int q = 0; q < graph.VerticesCount(); q++)
+            for (int i = 0; i < graph.VerticesCount(); i++)
             {
-                outDegree += matrix[i, q];
-                inDegree += matrix[q, i];
-            }
+                int inDegree = 0;
+                int outDegree = 0;
 
-            if (inDegree != outDegree) { return false; }
+                for (int q = 0; q < graph.VerticesCount(); q++)
+                {
+                    outDegree += matrix[i, q];
+                    inDegree += matrix[q, i];
+                }
+
+                if (inDegree != outDegree) { return false; }
+            }
+        }
+        else
+        {
+            for (int i = 0; i < graph.VerticesCount(); i++)
+            {
+                int degree = 0;
+
+                for (int q = 0; q < graph.VerticesCount(); q++)
+                {
+                    degree += matrix[i, q];
+                }
+
+                if (degree % 2 == 1) { return false; }
+            }
         }
 
         return true;

@@ -44,8 +44,8 @@ public class UserInterface
             "r" => GenerateGraph(),
             "Edges" => InputEdges(),
             "e" => InputEdges(),
-            //"Matrix" => InputMatrix(),
-            //"m" => InputMatrix(),
+            "Matrix" => InputMatrix(),
+            "m" => InputMatrix(),
             _ => throw new ArgumentException("Invalid string value for command", nameof(input)),
         };
 
@@ -100,9 +100,68 @@ public class UserInterface
         }
     }
 
-    //private static Graph InputMatrix()
-    //{
-    //}
+    private static Graph InputMatrix()
+    {
+        Console.WriteLine("Enter graph type (Standard, Directional): ");
+        string graphTypeInput = Console.ReadLine();
+
+        Console.WriteLine("Enter number of vertices: ");
+        string verticesCountInput = Console.ReadLine();
+        int verticesCount = int.Parse(verticesCountInput);
+        int[,] matrix = new int[verticesCount, verticesCount];
+
+        Console.WriteLine("Enter matrix as a 2D array: ");
+        string input = "";
+        string line;
+        while (!String.IsNullOrWhiteSpace(line = Console.ReadLine()))
+        {
+            input += line;
+        }
+
+        string[] rows = input.Split("},");
+
+        if (graphTypeInput == "Standard" ||
+            graphTypeInput == "s")
+        {
+            for (int i = 0; i < verticesCount; i++)
+            {
+                string row = rows[i];
+                string[] values = row.Split(",");
+                for (int q = i; q < verticesCount; q++)
+                {
+                    values[q] = new string((from c in values[q]
+                                            where char.IsDigit(c)
+                                            select c).ToArray());
+                    matrix[i, q] = int.Parse(values[q]);
+                    matrix[q, i] = matrix[i, q];
+                }
+            }
+            return new Graph(matrix);
+        }
+
+        else if (graphTypeInput == "Directional" ||
+         graphTypeInput == "d")
+        {
+            for (int i = 0; i < verticesCount; i++)
+            {
+                string row = rows[i];
+                string[] values = row.Split(",");
+                for (int q = 0; q < verticesCount; q++)
+                {
+                    values[q] = new string((from c in values[q]
+                                            where char.IsDigit(c)
+                                            select c).ToArray());
+                    matrix[i, q] = int.Parse(values[q]);
+                }
+            }
+            return new Graph(matrix, isDirected: true);
+        }
+
+        else
+        {
+            throw new ArgumentException("Invalid string value for command", nameof(graphTypeInput));
+        }
+    }
 
     private static Graph GenerateGraph()
     {

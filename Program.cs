@@ -6,17 +6,16 @@ internal class Program
 {
     public static void Main()
     {
-        //GraphVisualizer.Draw();
+        //Test graph in matrix form. Can be pasted during input.
 
-        int[,] testGraph = {{0, 1, 1, 1, 1, 0 },
-                            { 1, 0, 1, 0, 0, 0 },
-                            { 1, 1, 0, 1, 1, 0 },
-                            { 1, 0, 1, 0, 1, 1 },
-                            { 1, 0, 1, 1, 0, 1 },
-                            { 0, 0, 0, 1, 1, 0 } };
+        //{{0, 1, 1, 1, 1, 0 },
+        //{ 1, 0, 1, 0, 0, 0 },
+        //{ 1, 1, 0, 1, 1, 0 },
+        //{ 1, 0, 1, 0, 1, 1 },
+        //{ 1, 0, 1, 1, 0, 1 },
+        //{ 0, 0, 0, 1, 1, 0 } };
 
-        //int[,] inputMatrix = UserInterface.SetGraph();
-        Graph graph = new Graph(testGraph);
+        Graph graph = UserInterface.SetGraph();
 
         HashSet<int> dominationSet = DominationSetFinder.GetMinimalDominationSet(graph);
         UserInterface.PrintDominationSet(dominationSet);
@@ -25,7 +24,7 @@ internal class Program
         {
             Stack<int> path = EulerianPathFinder.GetEulerianCycle(graph);
             UserInterface.PrintPath(path);
-            GraphVisualizer.DrawGraph(path, dominationSet, graph.VerticesCount(), 200);
+            GraphVisualizer.DrawEulerianPath(path, graph.VerticesCount(), 200);
         }
         else
         {
